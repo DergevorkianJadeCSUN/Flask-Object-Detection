@@ -4,13 +4,14 @@ from PIL import Image
 
 import torch
 from flask import Flask, request
+from ultralytics import YOLO
 
 restapi = Flask(__name__)
 
-model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+model = YOLO('app/my_model.pt')
 model.eval()
 
-URL = "/v1/object-detection/yolov5"
+URL = "/v1/object-detection/"
 
 @restapi.route(URL, methods=["POST"])
 def predict():
