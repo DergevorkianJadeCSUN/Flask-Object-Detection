@@ -1,8 +1,6 @@
-import argparse
 import io
-from PIL import Image
 
-import torch
+from PIL import Image
 from flask import Flask, request
 from ultralytics import YOLO
 

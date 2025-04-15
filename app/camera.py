@@ -1,7 +1,4 @@
 import cv2
-import io
-import numpy
-from PIL import Image
 from ultralytics import YOLO
 from ultralytics.utils.plotting import Annotator
 model = YOLO('app/my_model.pt')
