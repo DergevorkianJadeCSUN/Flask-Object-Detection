@@ -1,6 +1,7 @@
 import io
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, Response, jsonify
 from PIL import Image
+from .camera import VideoCamera, PredictCamera
 import datetime
 
 import torch
@@ -12,6 +13,8 @@ views = Blueprint('views', __name__)
 
 model = YOLO('app/my_model.pt')
 model.eval()
+video_stream = VideoCamera()
+prediction_stream = PredictCamera()
 
 @views.route('/', methods=['GET','POST'])
 def predict():
@@ -31,6 +34,22 @@ def predict():
         results[0].save("app/" + img_name)
         return redirect(img_name)
     return render_template('index.html')
+
+def gen(camera):
+    while True:
+        frame = camera.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
+@views.route('/video_feed')
+def video_feed():
+     return Response(gen(video_stream),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@views.route("/prediction_feed")
+def predict_feed():
+    return Response(gen(prediction_stream),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 def get_prediction(img_bytes):
