@@ -6,7 +6,7 @@ from ultralytics import YOLO
 
 restapi = Flask(__name__)
 
-model = YOLO('app/my_model.pt')
+model = YOLO('app/model.pt')
 model.eval()
 
 URL = "/v1/object-detection/"

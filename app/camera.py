@@ -1,7 +1,10 @@
 import cv2
+import torch
 from ultralytics import YOLO
 from ultralytics.utils.plotting import Annotator
-model = YOLO('app/my_model.pt')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = YOLO('app/model.pt')
+model.to(device)
 model.eval()
 
 def get_prediction(img_array):
@@ -14,7 +17,7 @@ def get_prediction(img_array):
         for box in boxes:
             b = box.xyxy[0]  # get box coordinates in (left, top, right, bottom) format
             c = box.cls
-            annotator.box_label(b, model.names[int(c)])
+            annotator.box_label(b, model.names[int(c)], (200,0,0))
 
     image = annotator.result()
     return image

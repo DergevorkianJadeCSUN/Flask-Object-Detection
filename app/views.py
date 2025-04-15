@@ -1,11 +1,8 @@
 from flask import Blueprint, render_template, Response
 from .camera import VideoCamera, PredictCamera
 
-from ultralytics import YOLO
 views = Blueprint('views', __name__)
 
-model = YOLO('app/my_model.pt')
-model.eval()
 video_stream = VideoCamera()
 prediction_stream = PredictCamera()
 
